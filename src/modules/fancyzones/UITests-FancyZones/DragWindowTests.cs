@@ -589,7 +589,7 @@ namespace UITests_FancyZones
             {
                 new CustomLayouts.CustomLayoutWrapper
                 {
-                    Uuid = "{63F09977-D327-4DAC-98F4-0C886CAE9517}",
+                    Uuid = "{90657D4F-D066-457E-912D-E54589427C43}",
                     Type = CustomLayout.Grid.TypeToString(),
                     Name = "Custom Column",
                     Info = new CustomLayouts().ToJsonElement(new CustomLayouts.GridInfoWrapper
