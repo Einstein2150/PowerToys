@@ -53,10 +53,6 @@ namespace UITests_FancyZones
             // ClearOpenWindows
             ClearOpenWindows();
 
-            // clean app zone history file
-            FancyZonesEditorHelper.Files.CustomLayoutsIOHelper.DeleteFile();
-            AppZoneHistory.DeleteFile();
-
             // Set a custom layout with 1 subzones and clear app zone history
             SetupCustomLayouts();
 
@@ -115,6 +111,8 @@ namespace UITests_FancyZones
 
             Assert.AreEqual(zoneColorWithoutShift, initialColor, $"[{testCaseName}] Zone deactivated failed.");
             dragElement.ReleaseDrag();
+
+            Clean();
         }
 
         /// <summary>
@@ -162,6 +160,8 @@ namespace UITests_FancyZones
             string appZoneHistoryJson = AppZoneHistory.GetData();
             string? zoneNumber = ZoneSwitchHelper.GetZoneIndexSetByAppName(powertoysWindowName, appZoneHistoryJson);
             Assert.IsNull(zoneNumber, $"[{testCaseName}] AppZoneHistory layout was unexpectedly set.");
+
+            Clean();
         }
 
         /// <summary>
@@ -206,6 +206,8 @@ namespace UITests_FancyZones
 
             // check the zone color is activated
             Assert.AreEqual(highlightColor, initialColor, $"[{testCaseName}] Zone activation failed.");
+
+            Clean();
         }
 
         /// <summary>
@@ -248,6 +250,8 @@ namespace UITests_FancyZones
 
             Assert.AreEqual(highlightColor, initialColor, $"[{testCaseName}] Zone activation failed.");
             Assert.AreNotEqual(highlightColor, withShiftColor, $"[{testCaseName}] Zone deactivation failed.");
+
+            Clean();
         }
 
         /// <summary>
@@ -293,6 +297,8 @@ namespace UITests_FancyZones
 
             Session.ReleaseKey(Key.Shift);
             dragElement.ReleaseDrag();
+
+            Clean();
         }
 
         /// <summary>
@@ -311,6 +317,8 @@ namespace UITests_FancyZones
 
             var pixel = GetPixelWhenMakeDraggedWindow();
             Assert.AreNotEqual(pixel.PixelInWindow, pixel.TransPixel, $"[{nameof(TestMakeDraggedWindowTransparentOn)}]  Window transparency failed.");
+
+            Clean();
         }
 
         /// <summary>
@@ -329,6 +337,7 @@ namespace UITests_FancyZones
 
             var pixel = GetPixelWhenMakeDraggedWindow();
             Assert.AreEqual(pixel.PixelInWindow, pixel.TransPixel, $"[{nameof(TestMakeDraggedWindowTransparentOff)}]  Window without transparency failed.");
+            Clean();
         }
 
         // Helper method to ensure the desktop has no open windows by clicking the "Show Desktop" button
@@ -354,7 +363,6 @@ namespace UITests_FancyZones
         // Setup custom layout with 1 subzones
         private void SetupCustomLayouts()
         {
-            FancyZonesEditorHelper.Files.CustomLayoutsIOHelper.DeleteFile();
 
             var customLayouts = new CustomLayouts();
             var customLayoutListWrapper = CustomLayoutsList;
@@ -402,9 +410,9 @@ namespace UITests_FancyZones
             {
                 // Console.WriteLine($"[Exception] Failed to attach to FancyZones window. Retrying...");
                 this.Find<Microsoft.PowerToys.UITest.Button>("Close").Click();
-                SetupCustomLayouts();
                 this.Session.Attach(PowerToysModule.PowerToysSettings);
-                this.Find<Microsoft.PowerToys.UITest.Button>("Launch layout editor").Click(false, 5000, 5000);
+                SetupCustomLayouts();
+                this.Find<Microsoft.PowerToys.UITest.Button>("Launch layout editor").Click(false, 500, 6000);
                 this.Session.Attach(PowerToysModule.FancyZone);
                 this.Find<Microsoft.PowerToys.UITest.Button>("Maximize").Click();
 
@@ -566,6 +574,13 @@ namespace UITests_FancyZones
                 },
             },
         };
+
+        private void Clean()
+        {
+            // clean app zone history file
+            AppZoneHistory.DeleteFile();
+            FancyZonesEditorHelper.Files.CustomLayoutsIOHelper.DeleteFile();
+        }
 
         // set the custom layout with 1 subzones
         private static readonly CustomLayouts.CustomLayoutListWrapper CustomLayoutsListWithTwo = new CustomLayouts.CustomLayoutListWrapper
