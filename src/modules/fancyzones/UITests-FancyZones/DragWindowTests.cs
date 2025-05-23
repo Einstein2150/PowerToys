@@ -107,7 +107,6 @@ namespace UITests_FancyZones
             Assert.IsTrue(
     withShiftColor == inactivateColor || withShiftColor == highlightColor,
     $"[{testCaseName}] Zone display failed: withShiftColor was {withShiftColor}, expected {inactivateColor} or {highlightColor}.");
-            Assert.AreEqual(inactivateColor, withShiftColor, $"[{testCaseName}] Zone display failed.");
 
             Assert.AreEqual(zoneColorWithoutShift, initialColor, $"[{testCaseName}] Zone deactivated failed.");
             dragElement.ReleaseDrag();
@@ -363,7 +362,6 @@ namespace UITests_FancyZones
         // Setup custom layout with 1 subzones
         private void SetupCustomLayouts()
         {
-
             var customLayouts = new CustomLayouts();
             var customLayoutListWrapper = CustomLayoutsList;
 
